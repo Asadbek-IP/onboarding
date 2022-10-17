@@ -10,14 +10,13 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
-  PageController? pageController;
-  int? hozirgiIndex = 0;
-
+  PageController? pageController = PageController();
+ int? hozirgiIndex = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    pageController = PageController();
+    
   }
 
   @override
@@ -50,29 +49,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       "By boosting your producivity we helpyou achieve higher goals"),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          Container(
+            margin: const EdgeInsets.all(16),
+            width: double.infinity,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const SizedBox(
-                  width: double.infinity,
-                ),
                 Container(
                   height: 54,
                   child: ElevatedButton(
-                    onPressed: () {
-                      hozirgiIndex != 2
-                          ? pageController!.nextPage(
-                              duration: Duration(milliseconds: 800),
-                              curve: Curves.fastOutSlowIn)
-                          : Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      HomePage()));
-                    },
                     style: ButtonStyle(
                       backgroundColor: const MaterialStatePropertyAll(
                         Color(0xFFEF895F),
@@ -83,53 +69,34 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ),
                     ),
-                    child: Padding(
+                    onPressed: () {
+                     if(hozirgiIndex==2){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>HomePage()));
+                     }else{
+                      pageController!.nextPage(duration: Duration(seconds: 1), curve: Curves.linear);
+                     }
+                    },
+                    child:  Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        hozirgiIndex != 2 ? "Next" : "Get Started",
-                        style: TextStyle(fontSize: 16, fontFamily: "Raleway"),
+                        hozirgiIndex!=2?"Next":"Get started",
+                        style: TextStyle(fontFamily: "Raleway", fontSize: 16),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
+                 SizedBox(height: 20,),
+                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: indicatorBuild(hozirgiIndex!),
-                )
+                  children: _indicatorBuilder(hozirgiIndex!),
+                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
-}
-
-Widget _indicatorItem(bool isActivity) {
-  return AnimatedContainer(
-    margin: EdgeInsets.symmetric(horizontal: 3),
-    height: 7,
-    width: isActivity ? 24 : 7,
-    decoration: BoxDecoration(
-        color: isActivity ? Colors.white : Colors.white30,
-        borderRadius: BorderRadius.circular(isActivity ? 20 : 100)),
-    duration: const Duration(milliseconds: 600),
-  );
-}
-
-List<Widget> indicatorBuild(int hozirgiIndex) {
-  List<Widget> list = [];
-  for (int i = 0; i < 3; i++) {
-    if (hozirgiIndex == i) {
-      list.add(_indicatorItem(true));
-    } else {
-      list.add(_indicatorItem(false));
-    }
-  }
-  return list;
 }
 
 Widget _pageItem(
@@ -166,4 +133,29 @@ Widget _pageItem(
       ),
     ],
   );
+}
+
+Widget _indicatorItem(bool isActive){
+  return AnimatedContainer(
+    duration: Duration(milliseconds: 700),
+    margin: EdgeInsets.all(5),
+    width: isActive ? 26 : 8,
+    height: 8,
+    decoration: BoxDecoration(
+      color: isActive? Colors.white : Colors.grey,
+      borderRadius: BorderRadius.circular(25)
+    ),
+  );
+}
+
+List<Widget> _indicatorBuilder(int hozirgiIndex){
+  List<Widget> list = [];
+  for(int i=0;i<3;i++){
+    if(hozirgiIndex == i){
+      list.add(_indicatorItem(true));
+    }else{
+      list.add(_indicatorItem(false));
+    }
+  }
+  return list;
 }

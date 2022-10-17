@@ -85,6 +85,8 @@ flutter:
     - family: Raleway
       fonts:
         - asset: assets/fonts/Raleway-Bold.ttf
+
+        
         
   #
   # For details regarding fonts from package dependencies,
